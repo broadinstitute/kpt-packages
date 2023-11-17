@@ -1,0 +1,34 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: gcp-load-balancer
+  annotations:
+    config.kubernetes.io/local-config: "true"
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    app.kubernetes.io/managed-by: kpt
+    environment: prod
+info:
+  description: Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
+  emails:
+    - devnull@broadinstitute.org
+  keywords:
+    - GKE
+    - GCP
+    - Load Balancer
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+      configPath: package-context.yaml
+    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+      configMap:
+        backstage.io/kubernetes-id: atlantis
+        app.kubernetes.io/managed-by: kpt
+        app: atlantis
+        environment: prod
+    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+      configPath: package-context.yaml
+  validators:
+    - image: gcr.io/kpt-fn/kubeval:v0.3
+      configMap:
+        ignore_missing_schemas: "true"

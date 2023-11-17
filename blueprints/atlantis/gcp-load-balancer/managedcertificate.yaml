@@ -1,0 +1,12 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: atlantis-managed-cert
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+spec:
+  domains:
+    - atlantis.example.com # kpt-set: ${cert-name}

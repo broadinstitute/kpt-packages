@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: atlantis
+  annotations:
+    #kubernetes.io/ingress.global-static-ip-name: ADDRESS_NAME # TODO config connecter to get static IP
+    networking.gke.io/v1beta1.FrontendConfig: http-to-https
+    networking.gke.io/managed-certificates: atlantis-managed-cert
+    kubernetes.io/ingress.class: gce
+  namespace: atlantis
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+spec:
+  defaultBackend:
+    service:
+      name: atlantis
+      port:
+        number: 80

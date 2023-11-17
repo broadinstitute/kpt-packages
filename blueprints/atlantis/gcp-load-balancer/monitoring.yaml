@@ -1,0 +1,17 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: atlantis
+  namespace: atlantis
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: atlantis
+  endpoints:
+  - port: 4141 # kpt-set: ${atlantis-port}
+    interval: 30s

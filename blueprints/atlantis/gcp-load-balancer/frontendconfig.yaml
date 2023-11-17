@@ -1,0 +1,13 @@
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: http-to-https
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+spec:
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT

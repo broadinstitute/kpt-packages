@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atlantis-config
+  namespace: atlantis
+  labels:
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+data:
+  config.yaml: |
+    automerge: true
+    # gh-user: atlantis # Uncomment to use a GitHub user account.
+    gh-app-id: 1234567
+    gh-app-slug: atlantis-app-slug
+    gh-app-key-file: /opt/atlantis-app-key.pem
+    write-git-creds: true
+    enable-diff-markdown-format: true
+    hide-unchanged-plan-comments: true
+    hide-prev-plan-comments: true
+    parallel-plan: true
+    repo-allowlist: 'github.com/org/*'
+  repos.yaml: |
+    metrics:
+      prometheus:
+        endpoint: /metrics

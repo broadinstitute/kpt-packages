@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: atlantis
+  namespace: atlantis
+  labels:
+    app.kubernetes.io/name: atlantis
+    backstage.io/kubernetes-id: atlantis
+    environment: prod
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: atlantis
+spec:
+  serviceName: atlantis
+  replicas: 1
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: atlantis
+      app: atlantis
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+      backstage.io/kubernetes-id: atlantis
+      environment: prod
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: atlantis
+        backstage.io/kubernetes-id: atlantis
+        app: atlantis
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        environment: prod
+    spec:
+      serviceAccountName: atlantis
+      securityContext:
+        fsGroup: 1000 # Atlantis group (1000) read/write access to volumes.
+      containers:
+      - name: atlantis
+        image: us-east4-docker.pkg.dev/bits-gke-clusters-dev/bits/atlantis:latest
+        env:
+        - name: ATLANTIS_CONFIG
+          value: /configs/config.yaml
+        - name: ATLANTIS_REPO_CONFIG
+          value: /configs/repos.yaml
+        # - name: ATLANTIS_GH_TOKEN # Uncomment to use a GitHub user account.
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: atlantis-vcs
+        #       key: token
+        - name: ATLANTIS_GH_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: atlantis-vcs
+              key: webhook-secret
+        - name: ATLANTIS_TFE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: atlantis-vcs
+              key: tfe-token
+        ### End GitHub Config ###
+        - name: ATLANTIS_DATA_DIR
+          value: /atlantis
+        - name: ATLANTIS_PORT # Kubernetes sets an ATLANTIS_PORT variable so we need to override.
+          value: "4141" # kpt-set: ${atlantis-port}
+        - name: ATLANTIS_ATLANTIS_URL
+          value: https://atlantis.example.com # kpt-set: ${atlantis-url}
+        volumeMounts:
+        - name: atlantis-data
+          mountPath: /atlantis
+        - name: atlantis-configs
+          mountPath: /configs
+          readOnly: true
+        - name: atlantis-app-key
+          mountPath: /opt
+          readOnly: true
+        ports:
+        - name: atlantis
+          containerPort: 4141 # kpt-set: ${atlantis-port}
+        resources:
+          requests:
+            memory: 2G
+            cpu: 100m
+          limits:
+            memory: 4G
+            cpu: 500m
+        livenessProbe:
+          # We only need to check every 60s since Atlantis is not a
+          # high-throughput service.
+          periodSeconds: 60
+          httpGet:
+            path: /healthz
+            port: 4141 # kpt-set: ${atlantis-port}
+            # TODO If using https, change this to HTTPS
+            scheme: HTTP
+        readinessProbe:
+          periodSeconds: 60
+          httpGet:
+            path: /healthz
+            port: 4141 # kpt-set: ${atlantis-port}
+            # TODO If using https, change this to HTTPS
+            scheme: HTTP
+      volumes:
+      - name: atlantis-configs
+        configMap:
+          name: atlantis-config
+          items:
+          - key: config.yaml
+            path: config.yaml
+          - key: repos.yaml
+            path: repos.yaml
+      - name: atlantis-app-key
+        secret:
+          secretName: atlantis-vcs
+          items:
+          - key: atlantis-app-key
+            path: atlantis-app-key.pem
+  volumeClaimTemplates:
+  - metadata:
+      name: atlantis-data
+      labels:
+        app: atlantis
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        backstage.io/kubernetes-id: atlantis
+        environment: prod
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources: # Volume should not be shared by multiple nodes.
+        requests:
+          # The biggest thing Atlantis stores is the Git repo when it checks it out.
+          # It deletes the repo after the pull request is merged.
+          storage: 5Gi
