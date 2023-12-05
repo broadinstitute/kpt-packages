@@ -5,4 +5,27 @@ metadata:
   annotations:
     config.kubernetes.io/local-config: "true"
 info:
+  emails:
+    - devnull@broadinstitute.org
   description: Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
+  keywords:
+    - GKE
+    - GCP
+    - Load Balancer
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+      configMap:
+        namespace: gcp-load-balancer
+    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+      configMap:
+        backstage.io/kubernetes-id: backstage-component-id
+    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+      configMap:
+        name: name-example
+        project-id: "monitoring-scope-project-id"
+        cert-name: host.example.com
+  validators:
+    - image: gcr.io/kpt-fn/kubeval:v0.3
+      configMap:
+        ignore_missing_schemas: "true"
