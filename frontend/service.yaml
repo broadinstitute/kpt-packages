@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: example
+  labels:
+    app: frontend
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    backstage.io/kubernetes-id: backstage-component-id
+spec:
+  clusterIP: None
+  selector:
+    app: frontend
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    backstage.io/kubernetes-id: backstage-component-id
+  ports:
+  - name: web
+    port: 9090
