@@ -5,6 +5,7 @@ metadata:
   namespace: gcp-load-balancer
   labels:
     backstage.io/kubernetes-id: backstage-component-id
+    app: gcp-load-balancer # kpt-set: ${name}
 spec:
   redirectToHttps:
     enabled: true
