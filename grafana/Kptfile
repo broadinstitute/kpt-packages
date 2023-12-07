@@ -1,0 +1,31 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: grafana
+  annotations:
+    config.kubernetes.io/local-config: "true"
+info:
+  description: kpt package for provisioning Grafana on Google Managed Prometheus
+  keywords:
+    - GKE
+    - GCP
+    - Google Managed Prometheus
+    - Grafana
+pipeline:
+  mutators:
+    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+      configMap:
+        namespace: grafana
+    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+      configMap:
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        backstage.io/kubernetes-id: backstage-component-id
+    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+      configMap:
+        cert-name: grafana.example.com
+        grafana_admin_group: admin@google.com
+        domain: example.com
+  validators:
+    - image: gcr.io/kpt-fn/kubeval:v0.3
+      configMap:
+        ignore_missing_schemas: "true"

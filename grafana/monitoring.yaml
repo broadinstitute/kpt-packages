@@ -1,0 +1,15 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: grafana
+  namespace: grafana
+  labels:
+    backstage.io/kubernetes-id: backstage-component-id
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  endpoints:
+  - port: 3000
+    interval: 1m
