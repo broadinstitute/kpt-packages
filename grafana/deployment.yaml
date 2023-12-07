@@ -1,0 +1,116 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: grafana
+  labels:
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    backstage.io/kubernetes-id: backstage-component-id
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+      app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+      backstage.io/kubernetes-id: backstage-component-id
+  template:
+    metadata:
+      labels:
+        app: grafana
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        backstage.io/kubernetes-id: backstage-component-id
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - arm64
+                - amd64
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.2.2
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana
+              key: admin_password
+        - name: GF_SERVER_ROOT_URL
+          value: "https://grafana.example.com" # kpt-set: https://${cert-name}
+        - name: GF_AUTH_GOOGLE_ENABLED
+          value: "true"
+        - name: GF_AUTH_GOOGLE_SCOPES
+          value: "openid email profile https://www.googleapis.com/auth/cloud-identity.groups.readonly"
+        - name: GF_AUTH_GOOGLE_ROLE_ATTRIBUTE_PATH
+          value: "contains(groups[*], 'admin@google.com') && 'GrafanaAdmin' || 'Viewer'" # kpt-set: contains(groups[*], '${grafana_admin_group}') && 'GrafanaAdmin' || 'Viewer'
+        - name: GF_AUTH_GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: grafana
+              key: client_id
+        - name: GF_AUTH_GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: grafana
+              key: client_secret
+        - name: GF_AUTH_GOOGLE_ALLOWED_DOMAINS
+          value: "example.com" # kpt-set: ${domain}
+        - name: GF_AUTH_GOOGLE_HOSTED_DOMAIN
+          value: "example.com" # kpt-set: ${domain}
+        - name: GF_AUTH_GOOGLE_ALLOW_ASSIGN_GRAFANA_ADMIN
+          value: "true"
+        - name: GF_AUTH_GOOGLE_SKIP_ORG_ROLE_SYNC
+          value: "false"
+        ports:
+        - name: web
+          containerPort: 3000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+        livenessProbe:
+          periodSeconds: 60
+          httpGet:
+            path: /healthz
+            port: 3000
+            scheme: HTTP
+        readinessProbe:
+          periodSeconds: 60
+          httpGet:
+            path: /healthz
+            port: 3000
+            scheme: HTTP
+        volumeMounts:
+        - name: gmp-datasource-config
+          mountPath: /etc/grafana/provisioning/datasources/prometheus-datasource.yaml
+          subPath: prometheus-datasource.yaml
+          readOnly: true
+          # todo insert cloudsql proxy sidecar
+      volumes:
+      - name: gmp-datasource-config
+        configMap:
+          name: grafana-config

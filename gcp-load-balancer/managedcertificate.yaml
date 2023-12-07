@@ -1,0 +1,12 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: gcp-load-balancer-managed-cert # kpt-set: ${name}-managed-cert
+  namespace: gcp-load-balancer
+  labels:
+    backstage.io/kubernetes-id: backstage-component-id
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    app: grafana
+spec:
+  domains:
+    - host.example.com # kpt-set: ${cert-name}
