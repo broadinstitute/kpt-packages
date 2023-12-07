@@ -22,7 +22,7 @@ pipeline:
         backstage.io/kubernetes-id: backstage-component-id
     - image: gcr.io/kpt-fn/apply-setters:v0.2.0
       configMap:
-        name: name-example
+        name: gcp-load-balancer
         project-id: "monitoring-scope-project-id"
         cert-name: host.example.com
   validators:
