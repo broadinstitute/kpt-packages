@@ -8,8 +8,6 @@ metadata:
     app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     app: grafana
     name: label-example
-  annotations:
-    internal.kpt.dev/upstream-identifier: 'networking.gke.io|ManagedCertificate|default|name-example-managed-cert' # kpt-set: networking.gke.io|ManagedCertificate|default|${name}-managed-cert
 spec:
   domains:
     - host.example.com # kpt-set: ${cert-name}

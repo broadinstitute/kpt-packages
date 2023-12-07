@@ -5,8 +5,6 @@ metadata:
   namespace: gcp-load-balancer
   labels:
     backstage.io/kubernetes-id: backstage-component-id
-  annotations:
-    internal.kpt.dev/upstream-identifier: 'networking.gke.io|FrontendConfig|default|http-to-https'
 spec:
   redirectToHttps:
     enabled: true
