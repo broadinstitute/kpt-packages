@@ -27,6 +27,7 @@ pipeline:
         domain: example.com
         instance_connection_name: project-id:region:instance-name
     - image: gcr.io/kpt-fn/set-annotations:v0.1.4
+      name: set-grafana-service-account-annotations
       configMap:
         iam.gke.io/gcp-service-account: grafana@monitoring-scope-project-id.iam.gserviceaccount.com
       selectors:
