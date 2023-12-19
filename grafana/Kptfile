@@ -25,6 +25,11 @@ pipeline:
         cert-name: grafana.example.com
         grafana_admin_group: admin@google.com
         domain: example.com
+    - image: gcr.io/kpt-fn/set-annotations:v0.1.4
+      configMap:
+        iam.gke.io/gcp-service-account: grafana@monitoring-scope-project-id.iam.gserviceaccount.com
+      selectors:
+        - kind: ServiceAccount
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:

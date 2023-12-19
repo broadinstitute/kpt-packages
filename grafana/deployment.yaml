@@ -33,6 +33,7 @@ spec:
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         backstage.io/kubernetes-id: backstage-component-id
     spec:
+      serviceAccountName: grafana
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
