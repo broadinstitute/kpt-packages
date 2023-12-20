@@ -1,0 +1,28 @@
+---
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: 'weekly'
+  - package-ecosystem: 'docker'
+    directory: 'atlantis'
+    schedule:
+      # Check for updates to Docker images every week
+      interval: 'weekly'
+  - package-ecosystem: 'docker'
+    directory: 'frontend'
+    schedule:
+      # Check for updates to Docker images every week
+      interval: 'weekly'
+  - package-ecosystem: 'docker'
+    directory: 'gcp-load-balancer'
+    schedule:
+      # Check for updates to Docker images every week
+      interval: 'weekly'
+  - package-ecosystem: 'docker'
+    directory: 'grafana'
+    schedule:
+      # Check for updates to Docker images every week
+      interval: 'weekly'

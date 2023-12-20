@@ -33,6 +33,7 @@ spec:
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         backstage.io/kubernetes-id: backstage-component-id
     spec:
+      serviceAccountName: grafana
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -82,6 +83,12 @@ spec:
           value: "true"
         - name: GF_AUTH_GOOGLE_SKIP_ORG_ROLE_SYNC
           value: "false"
+        - name: GF_DATABASE_TYPE
+          value: "postgres"
+        - name: GF_DATABASE_HOST
+          value: "127.0.0.1:5432"
+        - name: GF_DATABASE_USER
+          value: "grafana@project-id.iam" # kpt-set: ${db_user}
         ports:
         - name: web
           containerPort: 3000
@@ -110,6 +117,44 @@ spec:
           subPath: prometheus-datasource.yaml
           readOnly: true
           # todo insert cloudsql proxy sidecar
+      - name: cloud-sql-proxy
+        # It is recommended to use the latest version of the Cloud SQL Auth Proxy
+        # Make sure to update on a regular schedule!
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1
+        args:
+        # If connecting from a VPC-native GKE cluster, you can use the
+        # following flag to have the proxy connect over private IP
+        # - "--private-ip"
+
+        # Enable structured logging with LogEntry format:
+        - "--structured-logs"
+        # Replace DB_PORT with the port the proxy should listen on
+        - "--port=5432"
+        # Use auto iam authn to authenticate with the Cloud SQL instance
+        - "--auto-iam-authn"
+        - "project-id:region:instance-name" # kpt-set: ${instance_connection_name} 
+        securityContext:
+          # The default Cloud SQL Auth Proxy image runs as the
+          # "nonroot" user and group (uid: 65532) by default.
+          runAsNonRoot: true
+        # You should use resource requests/limits as a best practice to prevent
+        # pods from consuming too many resources and affecting the execution of
+        # other pods. You should adjust the following values based on what your
+        # application needs. For details, see
+        # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+        resources:
+          requests:
+            # The proxy's memory use scales linearly with the number of active
+            # connections. Fewer open connections will use less memory. Adjust
+            # this value based on your application's requirements.
+            memory: "512Mi"
+            # The proxy's CPU use scales linearly with the amount of IO between
+            # the database and the application. Adjust this value based on your
+            # application's requirements.
+            cpu: ".5"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
       volumes:
       - name: gmp-datasource-config
         configMap:
