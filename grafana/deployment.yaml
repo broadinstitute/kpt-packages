@@ -83,6 +83,12 @@ spec:
           value: "true"
         - name: GF_AUTH_GOOGLE_SKIP_ORG_ROLE_SYNC
           value: "false"
+        - name: GF_DATABASE_TYPE
+          value: "postgres"
+        - name: GF_DATABASE_HOST
+          value: "127.0.0.1:5432"
+        - name: GF_DATABASE_USER
+          value: "grafana@project-id.iam" # kpt-set: ${db_user}
         ports:
         - name: web
           containerPort: 3000
@@ -124,6 +130,8 @@ spec:
         - "--structured-logs"
         # Replace DB_PORT with the port the proxy should listen on
         - "--port=5432"
+        # Use auto iam authn to authenticate with the Cloud SQL instance
+        - "--auto-iam-authn"
         - "project-id:region:instance-name" # kpt-set: ${instance_connection_name} 
         securityContext:
           # The default Cloud SQL Auth Proxy image runs as the

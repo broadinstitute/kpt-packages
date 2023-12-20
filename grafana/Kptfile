@@ -25,6 +25,7 @@ pipeline:
         cert-name: grafana.example.com
         grafana_admin_group: admin@google.com
         domain: example.com
+        db_user: grafana@project-id.iam
         instance_connection_name: project-id:region:instance-name
     - image: gcr.io/kpt-fn/set-annotations:v0.1.4
       name: set-grafana-service-account-annotations
