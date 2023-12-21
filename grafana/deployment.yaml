@@ -89,9 +89,15 @@ spec:
           value: "127.0.0.1:5432"
         - name: GF_DATABASE_USER
           value: "grafana@project-id.iam" # kpt-set: ${db_user}
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         ports:
         - name: web
           containerPort: 3000
+        - name: grafana-alert
+          containerPort: 9094
         resources:
           limits:
             cpu: "1"
