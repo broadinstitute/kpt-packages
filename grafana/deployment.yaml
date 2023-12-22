@@ -98,7 +98,7 @@ spec:
         - name: GF_UNIFIED_ALERTING_HA_UNIFIED_ADDRESS
           value: "${POD_IP}:9094"
         - name: GF_UNIFIED_ALERTING_HA_PEER_TIMEOUT
-          value: "15"
+          value: "15s"
         - name: POD_IP
           valueFrom:
             fieldRef:
