@@ -89,9 +89,25 @@ spec:
           value: "127.0.0.1:5432"
         - name: GF_DATABASE_USER
           value: "grafana@project-id.iam" # kpt-set: ${db_user}
+        - name: GF_UNIFIED_ALERTING_ENABLED
+          value: "true"
+        - name: GF_UNIFIED_ALERTING_HA_LISTEN_ADDRESS
+          value: "${POD_IP}:9094"
+        - name: GF_UNIFIED_ALERTING_HA_PEERS
+          value: "grafana-alerting.grafana:9094"
+        - name: GF_UNIFIED_ALERTING_HA_UNIFIED_ADDRESS
+          value: "${POD_IP}:9094"
+        - name: GF_UNIFIED_ALERTING_HA_PEER_TIMEOUT
+          value: "15s"
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         ports:
         - name: web
           containerPort: 3000
+        - name: grafana-alert
+          containerPort: 9094
         resources:
           limits:
             cpu: "1"
