@@ -1,0 +1,8 @@
+---
+site_name: 'A Catalog of [Kpt](https://kpt.dev/) Packages and Blueprints'
+
+nav:
+  - Home: index.md
+
+plugins:
+  - techdocs-core

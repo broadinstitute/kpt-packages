@@ -25,6 +25,7 @@ pipeline:
         name: gcp-load-balancer
         project-id: "monitoring-scope-project-id"
         cert-name: host.example.com
+        sslPolicy: "gcp-load-balancer-ssl-policy"
   validators:
     - image: gcr.io/kpt-fn/kubeval:v0.3
       configMap:
