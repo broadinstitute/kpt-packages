@@ -7,6 +7,7 @@ metadata:
     backstage.io/kubernetes-id: backstage-component-id
     app: gcp-load-balancer # kpt-set: ${name}
 spec:
+  sslPolicy: gke-ingress-ssl-policy # kpt-set: ${sslPolicy}
   redirectToHttps:
     enabled: true
     responseCodeName: MOVED_PERMANENTLY_DEFAULT
