@@ -50,7 +50,7 @@ spec:
                 - linux
       containers:
       - name: grafana
-        image: grafana/grafana:11.4.0
+        image: grafana/grafana:11.5.1
         env:
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
@@ -136,7 +136,7 @@ spec:
       - name: cloud-sql-proxy
         # It is recommended to use the latest version of the Cloud SQL Auth Proxy
         # Make sure to update on a regular schedule!
-        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.3
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.15.0
         args:
         # If connecting from a VPC-native GKE cluster, you can use the
         # following flag to have the proxy connect over private IP
