@@ -52,7 +52,7 @@ spec:
                 - linux
       containers:
       - name: frontend
-        image: gke.gcr.io/prometheus-engine/frontend:v0.9.0-gke.1
+        image: gke.gcr.io/prometheus-engine/frontend:v0.15.5-gke.1
         args:
         - "--web.listen-address=:9090"
         - "--query.project-id=monitoring-scope-project-id" # kpt-set: --query.project-id=${project-id}
