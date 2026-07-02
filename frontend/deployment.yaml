@@ -34,52 +34,52 @@ spec:
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         backstage.io/kubernetes-id: backstage-component-id
     spec:
-      serviceAccountName: frontend
       automountServiceAccountToken: true
+      serviceAccountName: frontend
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - arm64
-                - amd64
-              - key: kubernetes.io/os
-                operator: In
-                values:
-                - linux
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - arm64
+                  - key: kubernetes.io/os
+                    operator: In
+                    values:
+                      - linux
       containers:
-      - name: frontend
-        image: gke.gcr.io/prometheus-engine/frontend:v0.17.4-gke.1
-        args:
-        - "--web.listen-address=:9090"
-        - "--query.project-id=monitoring-scope-project-id" # kpt-set: --query.project-id=${project-id}
-        ports:
-        - name: web
-          containerPort: 9090
-        readinessProbe:
-          httpGet:
-            path: /-/ready
-            port: web
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - all
-          privileged: false
-          runAsGroup: 1000
-          runAsNonRoot: true
-          runAsUser: 1000
-        livenessProbe:
-          httpGet:
-            path: /-/healthy
-            port: web
-        resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "0.5"
-            memory: "512Mi"
+        - name: frontend
+          image: gke.gcr.io/prometheus-engine/frontend:v0.17.4-gke.1
+          args:
+            - "--web.listen-address=:9090"
+            - "--query.project-id=monitoring-scope-project-id" # kpt-set: --query.project-id=${project-id}
+          ports:
+            - name: web
+              containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: web
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
+            privileged: false
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: web
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi

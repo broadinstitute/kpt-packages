@@ -9,10 +9,10 @@ metadata:
     backstage.io/kubernetes-id: backstage-component-id
 spec:
   clusterIP: None
+  ports:
+    - name: web
+      port: 9090
   selector:
     app: frontend
     app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     backstage.io/kubernetes-id: backstage-component-id
-  ports:
-  - name: web
-    port: 9090

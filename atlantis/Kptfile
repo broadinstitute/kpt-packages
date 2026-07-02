@@ -5,7 +5,9 @@ metadata:
   annotations:
     config.kubernetes.io/local-config: "true"
 info:
-  description: Kubernetes Deployment of Atlantis on GKE. Atlantis is a tool for collaborating on Terraform through GitHub, GitLab, and Bitbucket.
+  description: >-
+    Kubernetes Deployment of Atlantis on GKE. Atlantis is a tool for
+    collaborating on Terraform through GitHub, GitLab, and Bitbucket.
   site: https://www.runatlantis.io/
   emails:
     - devnull@broadinstitute.org
@@ -16,22 +18,22 @@ info:
     - GCP
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/set-image:v0.1.1
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-image:v0.1
       configMap:
         name: us-east4-docker.pkg.dev/bits-gke-clusters/bits/atlantis:latest
         newName: ghcr.io/runatlantis/atlantis
         newTag: latest
-    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-namespace:v0.4
       configPath: package-context.yaml
-    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.2
       configMap:
-        backstage.io/kubernetes-id: atlantis
-        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         app: atlantis
+        app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+        backstage.io/kubernetes-id: atlantis
         environment: prod
-    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
       configPath: package-context.yaml
   validators:
-    - image: gcr.io/kpt-fn/kubeval:v0.3
+    - image: ghcr.io/kptdev/krm-functions-catalog/kubeconform:v0.1
       configMap:
         ignore_missing_schemas: "true"

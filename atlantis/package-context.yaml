@@ -5,7 +5,7 @@ metadata:
   annotations:
     config.kubernetes.io/local-config: "true"
 data:
-  name: atlantis
-  namespace: atlantis
   atlantis-url: https://atlantis.example.com
   cert-name: atlantis.example.com
+  name: atlantis
+  namespace: atlantis

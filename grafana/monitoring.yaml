@@ -4,12 +4,12 @@ metadata:
   name: grafana
   namespace: grafana
   labels:
-    backstage.io/kubernetes-id: backstage-component-id
     app.kubernetes.io/managed-by: gcp-cloud-build-deploy
+    backstage.io/kubernetes-id: backstage-component-id
 spec:
   selector:
     matchLabels:
       app: grafana
   endpoints:
-  - port: 3000
-    interval: 1m
+    - port: 3000
+      interval: 1m

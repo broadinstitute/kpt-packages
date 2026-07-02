@@ -1,0 +1,15 @@
+---
+name: checks
+
+"on":
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  conventional-commits:
+    uses: broadinstitute/shared-workflows/.github/workflows/conventional-commit.yaml@v6
+  pre-commit:
+    uses: broadinstitute/shared-workflows/.github/workflows/pre-commit.yaml@v6
+  prettier:
+    uses: broadinstitute/shared-workflows/.github/workflows/prettier.yaml@v6

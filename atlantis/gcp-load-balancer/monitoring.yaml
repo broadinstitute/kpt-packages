@@ -4,14 +4,14 @@ metadata:
   name: atlantis
   namespace: atlantis
   labels:
+    app: atlantis
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     backstage.io/kubernetes-id: atlantis
     environment: prod
-    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-    app: atlantis
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: atlantis
   endpoints:
-  - port: 4141 # kpt-set: ${atlantis-port}
-    interval: 30s
+    - port: 4141 # kpt-set: ${atlantis-port}
+      interval: 30s

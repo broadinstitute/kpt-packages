@@ -4,19 +4,19 @@ metadata:
   name: atlantis
   namespace: atlantis
   labels:
+    app: atlantis
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     backstage.io/kubernetes-id: atlantis
     environment: prod
-    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-    app: atlantis
 spec:
   type: NodePort
   ports:
-  - name: atlantis
-    port: 80
-    targetPort: 4141
+    - name: atlantis
+      port: 80
+      targetPort: 4141
   selector:
+    app: atlantis
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     app.kubernetes.io/name: atlantis
     backstage.io/kubernetes-id: atlantis
     environment: prod
-    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-    app: atlantis

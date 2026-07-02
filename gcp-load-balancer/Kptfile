@@ -7,26 +7,27 @@ metadata:
 info:
   emails:
     - devnull@broadinstitute.org
-  description: Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
+  description: >-
+    Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
   keywords:
-    - GKE
     - GCP
+    - GKE
     - Load Balancer
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-namespace:v0.4
       configMap:
         namespace: gcp-load-balancer
-    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.2
       configMap:
         backstage.io/kubernetes-id: backstage-component-id
-    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
       configMap:
-        name: gcp-load-balancer
-        project-id: "monitoring-scope-project-id"
         cert-name: host.example.com
-        sslPolicy: "gcp-load-balancer-ssl-policy"
+        name: gcp-load-balancer
+        project-id: monitoring-scope-project-id
+        sslPolicy: gcp-load-balancer-ssl-policy
   validators:
-    - image: gcr.io/kpt-fn/kubeval:v0.3
+    - image: ghcr.io/kptdev/krm-functions-catalog/kubeconform:v0.1
       configMap:
         ignore_missing_schemas: "true"
