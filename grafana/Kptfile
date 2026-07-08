@@ -7,27 +7,27 @@ metadata:
 info:
   description: kpt package for provisioning Grafana on Google Managed Prometheus
   keywords:
-    - GKE
     - GCP
+    - GKE
     - Google Managed Prometheus
     - Grafana
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-namespace:v0.4
       configMap:
         namespace: grafana
-    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.2
       configMap:
         app.kubernetes.io/managed-by: gcp-cloud-build-deploy
         backstage.io/kubernetes-id: backstage-component-id
-    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
       configMap:
         cert-name: grafana.example.com
-        grafana_admin_group: admin@google.com
-        domain: example.com
         db_user: grafana@project-id.iam
+        domain: example.com
+        grafana_admin_group: admin@google.com
         instance_connection_name: project-id:region:instance-name
-    - image: gcr.io/kpt-fn/set-annotations:v0.1.4
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-annotations:v0.1
       name: set-grafana-service-account-annotations
       configMap:
         iam.gke.io/gcp-service-account: grafana@monitoring-scope-project-id.iam.gserviceaccount.com
@@ -35,6 +35,6 @@ pipeline:
         - kind: ServiceAccount
           name: grafana
   validators:
-    - image: gcr.io/kpt-fn/kubeval:v0.3
+    - image: ghcr.io/kptdev/krm-functions-catalog/kubeconform:v0.1
       configMap:
         ignore_missing_schemas: "true"

@@ -3,10 +3,10 @@ kind: ManagedCertificate
 metadata:
   name: atlantis-managed-cert
   labels:
+    app: atlantis
+    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
     backstage.io/kubernetes-id: atlantis
     environment: prod
-    app.kubernetes.io/managed-by: gcp-cloud-build-deploy
-    app: atlantis
 spec:
   domains:
     - atlantis.example.com # kpt-set: ${cert-name}

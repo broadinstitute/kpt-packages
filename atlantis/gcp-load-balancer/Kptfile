@@ -9,7 +9,8 @@ metadata:
     app.kubernetes.io/managed-by: kpt
     environment: prod
 info:
-  description: Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
+  description: >-
+    Package for GCP Application Load Balancer (ALB) and Cloud DNS for use in GCP
   emails:
     - devnull@broadinstitute.org
   keywords:
@@ -18,17 +19,17 @@ info:
     - Load Balancer
 pipeline:
   mutators:
-    - image: gcr.io/kpt-fn/set-namespace:v0.4.1
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-namespace:v0.4
       configPath: package-context.yaml
-    - image: gcr.io/kpt-fn/set-labels:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.2
       configMap:
-        backstage.io/kubernetes-id: atlantis
-        app.kubernetes.io/managed-by: kpt
         app: atlantis
+        app.kubernetes.io/managed-by: kpt
+        backstage.io/kubernetes-id: atlantis
         environment: prod
-    - image: gcr.io/kpt-fn/apply-setters:v0.2.0
+    - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
       configPath: package-context.yaml
   validators:
-    - image: gcr.io/kpt-fn/kubeval:v0.3
+    - image: ghcr.io/kptdev/krm-functions-catalog/kubeconform:v0.1
       configMap:
         ignore_missing_schemas: "true"

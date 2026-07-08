@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   name: atlantis
   annotations:
-    #kubernetes.io/ingress.global-static-ip-name: ADDRESS_NAME # TODO config connecter to get static IP
-    networking.gke.io/v1beta1.FrontendConfig: http-to-https
-    networking.gke.io/managed-certificates: atlantis-managed-cert
     kubernetes.io/ingress.class: gce
+    # kubernetes.io/ingress.global-static-ip-name: ADDRESS_NAME # TODO config connecter to get static IP
+    networking.gke.io/managed-certificates: atlantis-managed-cert
+    networking.gke.io/v1beta1.FrontendConfig: http-to-https
   namespace: atlantis
   labels:
     backstage.io/kubernetes-id: atlantis

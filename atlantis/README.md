@@ -2,19 +2,18 @@
 
 ## Description
 
-Kubernetes Deployment of  Atlantis
+Kubernetes Deployment of Atlantis
 
 ## Usage
 
 ### Fetch the package
 
-`kpt pkg get REPO_URI[.git]/PKG_PATH[@VERSION] atlantis`
-Details: <https://kpt.dev/reference/cli/pkg/get/>
+`kpt pkg get REPO_URI[.git]/PKG_PATH[@VERSION] atlantis` Details:
+<https://kpt.dev/reference/cli/pkg/get/>
 
 ### View package content
 
-`kpt pkg tree atlantis`
-Details: <https://kpt.dev/reference/cli/pkg/tree/>
+`kpt pkg tree atlantis` Details: <https://kpt.dev/reference/cli/pkg/tree/>
 
 ### Apply the package
 

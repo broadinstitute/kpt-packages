@@ -4,8 +4,8 @@ metadata:
   name: http-to-https
   namespace: gcp-load-balancer
   labels:
-    backstage.io/kubernetes-id: backstage-component-id
     app: gcp-load-balancer # kpt-set: ${name}
+    backstage.io/kubernetes-id: backstage-component-id
 spec:
   sslPolicy: gke-ingress-ssl-policy # kpt-set: ${sslPolicy}
   redirectToHttps:

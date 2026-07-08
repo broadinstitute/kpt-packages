@@ -5,10 +5,10 @@ metadata:
   annotations:
     config.kubernetes.io/local-config: "true"
   labels:
-    backstage.io/kubernetes-id: atlantis
     app.kubernetes.io/managed-by: kpt
+    backstage.io/kubernetes-id: atlantis
     environment: prod
 data:
+  cert-name: atlantis.example.com
   name: atlantis
   namespace: atlantis
-  cert-name: atlantis.example.com
