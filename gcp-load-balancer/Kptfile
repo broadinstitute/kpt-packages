@@ -16,17 +16,12 @@ info:
 pipeline:
   mutators:
     - image: ghcr.io/kptdev/krm-functions-catalog/set-namespace:v0.4
-      configMap:
-        namespace: gcp-load-balancer
+      configPath: package-context.yaml
     - image: ghcr.io/kptdev/krm-functions-catalog/set-labels:v0.2
       configMap:
         backstage.io/kubernetes-id: backstage-component-id
     - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
-      configMap:
-        cert-name: host.example.com
-        name: gcp-load-balancer
-        project-id: monitoring-scope-project-id
-        sslPolicy: gcp-load-balancer-ssl-policy
+      configPath: package-context.yaml
   validators:
     - image: ghcr.io/kptdev/krm-functions-catalog/kubeconform:v0.1
       configMap:
